@@ -47,6 +47,7 @@ int load_buffer(int buffer_half){
 
 // Returns if there are still tokens available for reading
 int tokens_available(){
+    // printf("buffer_pos %d\n", buffer_pos);
     if (!reached_EOF())     // Data in file
         return 1;
 
@@ -54,10 +55,8 @@ int tokens_available(){
     if (buffer_pos < buffer_load_size - 1)      // Buffer 1 not empty
         return 1;
 
-    if (buffer_pos >= BUFFER_SIZE && buffer_pos < BUFFER_SIZE + buffer_load_size)    // Buffer 2 not empty
+    if (buffer_pos >= BUFFER_SIZE && buffer_pos < BUFFER_SIZE + buffer_load_size - 1)    // Buffer 2 not empty
         return 1;
-    printf("buffer_pos: %d\n", buffer_pos);
-    printf("buffer_load_size %d\n", buffer_load_size);
 
     return 0;
 }

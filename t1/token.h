@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#define MAX_LEXEMA_SIZE 10
+#define MAX_LEXEMA_SIZE 200
 
 // Tipos de Tokens
 typedef enum {
