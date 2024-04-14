@@ -33,9 +33,9 @@ int main(int argc, char * argv[]){
 
     while(tokens_available()){
         Token * t = identify_token();
-        fprintf(out_file, "<\'%s\',%s>\n",t->lexema, get_token_Type(t));
-        // print_token(t);
-        // printf("\n");
+        if (t != NULL)      // GAMBIARRA: se for um comentário, retorna NULL, deve ter um jeito melhor de fazer isso
+            fprintf(out_file, "<\'%s\',%s>\n",t->lexema, get_token_Type(t));
+        
     }
 
     return 0;

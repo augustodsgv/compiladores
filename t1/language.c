@@ -29,8 +29,7 @@ Token * identify_token(){
     // Skipping comments, if there are any
     if(c == '{'){
         skip_comments();
-        skip_spaces();
-        c = read_buffer();      // Reading next non comment char
+        return NULL;
     }
 
     // Operadores relacionais
@@ -58,10 +57,10 @@ Token * identify_token(){
         printf("Reached EOF");
         return NULL;
     }
-    // Else
-    printf("Symbol \" %c \" not recognized\n", c);
-    printf("%d\n", c);
-    exit(1);
+    // // Else
+    // printf("Symbol \" %c \" not recognized\n", c);
+    // printf("%d\n", c);
+    // exit(1);
 }
 
 Token * token_op_rel(char c){
