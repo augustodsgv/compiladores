@@ -158,7 +158,7 @@ Token * token_number(char c){
 }
 
 Token * token_string(char c){
-    char token_string[50] = {0};       // Supposing string can have, at maximum, 50 characters long
+    char token_string[50];       // Supposing string can have, at maximum, 50 characters long
     int token_string_pos = 0;
     char next_char;
     token_string[token_string_pos++] = c;
@@ -174,6 +174,7 @@ Token * token_string(char c){
         token_string[token_string_pos++] = next_char;
     }
 
+    token_string[token_string_pos] = '\0';
     // Checking for key words
     for(int i = 0; i < 37; i++){
         if(!strcmp(token_string, keywords[i])){    // Case it's a keyword
@@ -262,7 +263,6 @@ void skip_spaces(){
 
     regress_buffer();
 }
-
 
 
 // Skips comments

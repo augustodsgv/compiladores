@@ -1,7 +1,7 @@
 #ifndef FILE_READ_H
 #define FILE_READ_H
 
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 10
 
 /* File operations */
 int open_input_file(char * file_name);
