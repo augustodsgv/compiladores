@@ -16,5 +16,6 @@ int tokens_available();
 char read_buffer();
 void increment_buffer();
 void regress_buffer();
+void print_buffer();
 
 #endif /* FILE_READ_H */

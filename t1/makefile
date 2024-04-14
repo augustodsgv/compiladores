@@ -12,3 +12,6 @@ token:
 
 file_read:
 	gcc file_read.c -c -g3
+
+teste_buffer: file_read
+	gcc teste_buffer.c file_read.o -o teste_buffer

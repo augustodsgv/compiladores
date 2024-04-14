@@ -54,21 +54,38 @@ int load_buffer(int buffer_half){
 
 // Returns if there are still tokens available for reading
 int tokens_available(){
+    printf("buffer_load_size: %d\n", buffer_load_size);
+    printf("buffer: %s\n", buffer);
     // printf("buffer_pos %d\n", buffer_pos);
     if (!reached_EOF())     // Data in file
         return 1;
     // When reaches end of file, it will read n char + one '\0'
     // So, our buffer_pos will go from 0 to buffer_load_size - 2 (-1 from \0 and -1 from starting at 0)
     // Data remaining in buffers
-    if (buffer_pos < buffer_load_size - 1)      // Buffer 1 not empty
-        return 1;
+    if (buffer_load_size == BUFFER_SIZE){       // Loaded buffer_size successfully
+        printf("buff_load == buff_size\n");
+        if (buffer_pos < BUFFER_SIZE -1)      // Buffer 1 not empty
+            return 1;
 
-    if (buffer_pos >= BUFFER_SIZE && buffer_pos < BUFFER_SIZE + buffer_load_size -1)    // Buffer 2 not empty
-        return 1;
+        if (buffer_pos >= BUFFER_SIZE && buffer_pos < 2 * BUFFER_SIZE - 1)    // Buffer 2 not empty
+            return 1;
 
-    if (buffer_regressed)       // If buffer regressed, it will fail past tests, once it will reach EOF (it loaded the buffer) but it will be at last buffer
-        return 1;
+        if (buffer_regressed)       // If buffer regressed, it will fail past tests, once it will reach EOF (it loaded the buffer) but it will be at last buffer
+            return 1;
+    }else{
+        printf("buff_load != buff_size\n");
+        
+        if (buffer_pos < buffer_load_size - 2)      // Buffer 1 not empty
+            return 1;
 
+        if (buffer_pos >= BUFFER_SIZE && buffer_pos < BUFFER_SIZE + buffer_load_size -2)    // Buffer 2 not empty
+            return 1;
+
+        if (buffer_regressed)       // If buffer regressed, it will fail past tests, once it will reach EOF (it loaded the buffer) but it will be at last buffer
+            return 1;
+
+    }
+    printf("0\n");
     return 0;
 }
 
@@ -111,7 +128,27 @@ void regress_buffer(){
     }
 }
 
-// // Prints a token to the file
-// void print_token_to_file(char * token_string){
-//     fprintf("%s\n", )
-// }
+void print_buffer(){
+    // printf("buffer_regressed: %d\n", buffer_regressed);
+    // "v"
+    for(int i = 0; i < buffer_pos * 3 + 9; i++)
+        printf(" ");
+    if(buffer_pos >= BUFFER_SIZE)
+        printf("  ");
+    printf("v");
+    for(int i = 0; i < BUFFER_SIZE - buffer_pos; i++)
+        printf(" ");
+    printf("\n");
+    printf("buffer->[");
+    for(int i = 0; i < BUFFER_SIZE - 1; i++){
+        printf("%c, ", buffer[i]);
+    }
+    printf("%c ][ ", buffer[BUFFER_SIZE - 1]);
+    for(int i = BUFFER_SIZE; i < BUFFER_SIZE * 2 -1; i++){
+        printf("%c, ", buffer[i]);
+    }
+    printf("%c ]\n", buffer[BUFFER_SIZE * 2 - 1]);
+
+    printf("\n");
+}
+

@@ -1,14 +1,20 @@
-{ cálculo do consumo médio de um veículo, dados a quilometragem total percorrida e o número de litros utilizados nos dois únicos abastecimentos realizados }
+{ cálculo da média final de um aluno, feita pela média aritmética de duas provas, e escrever mensagem indicando aprovação ou reprovação }
 
 algoritmo
-	declare
-		quilometragem, abastecimento1, abastecimento2: real
+	declare notaProva1, notaProva2, media: real
 
-	{ obtenção da quilometragem e litros consumidos }
-	leia(quilometragem)
-	leia(abastecimento1, abastecimento2)
+	{ leitura das notas }
+	leia(notaProva1, notaProva2)
 
-	{ escrita do resultado do consumo }
-	escreva(quilometragem/(abastecimento1 + abastecimento2), " km/l")
+	{ cálculo da média }
+	media <- (notaProva1 + notaProva2)/2
 
+	{ resultados }
+	escreva(media)
+
+	se media >= 6 entao
+		escreva("Aprovado :)...")
+	senao
+		escreva("Reprovado :(...")
+	fim_se
 fim_algoritmo
