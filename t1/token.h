@@ -44,6 +44,7 @@ typedef enum {
 typedef struct {
     Token_type token_type;     // Guarda o tipo do token em uma string
     char * lexema;
+    // char * token_type_str;
 }Token;
 
 Token * create_token(Token_type token_type, char * lexema);

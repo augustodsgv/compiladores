@@ -6,17 +6,16 @@
 
 
 int main(int argc, char * argv[]){
+    // 0 file name
+    // 1 input file (source code)
+    // 2 output file
     if (argc < 2){
         fprintf(stderr, "Missing file name parameter\n");
-        // printf("Missing file name parameter\n");
         exit(1);
     }
-
-    // char * file_name = argv[1];
-    // char * file_name = "arquivo.txt";
     
     if (!open_file(argv[1])){
-        perror("Failed to open file");
+        perror("Failed to open source code file");
         exit(1);
     }
 

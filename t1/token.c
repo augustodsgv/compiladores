@@ -15,6 +15,18 @@ Token * create_token(Token_type token_type, char * lexema){
     return t;
 }
 
+Token * create_token(char * tipo_token, char * lexema){
+    Token * t = malloc(sizeof(Token));
+    t->lexema = malloc(sizeof(char) * MAX_LEXEMA_SIZE);
+    if (strlen(lexema) > MAX_LEXEMA_SIZE){
+        perror("Lexema has a size bigger then the maximum allowed");
+        exit(1);
+    }
+    strcpy(t->lexema, lexema);
+    t->token_type = token_type;
+    return t;
+}
+
 char * get_token_Type(Token * t){
     switch (t->token_type){
         case PCDeclaracoes :

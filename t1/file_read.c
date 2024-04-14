@@ -61,6 +61,7 @@ int tokens_available(){
 
     if (buffer_regressed)       // If buffer regressed, it will fail past tests, once it will reach EOF (it loaded the buffer) but it will be at last buffer
         return 1;
+        
     return 0;
 }
 
