@@ -35,18 +35,24 @@ Token * identify_token(){
 
     // Operadores relacionais
     if(c == '=' || c == '>' || c == '<')
-        return tokenOpRel(c);
+        return token_op_rel(c);
 
     // Operadores aritméticos
     if(c == '*' || c == '/' || c == '+' || c == '-')
-        return tokenOpArit(c);
+        return token_op_arit(c);
+
+    if (c == '.' || c == ':' || c == '(' || c == ')' || c == '[' || c == ']' || c == ',' || c == '%' || c == '^' || c == '&')
+        return token_special_char(c);
+
+    if (c == '\"')
+        return token_literal_string('\"');
 
     // Integer or float number
     if (char_is_number(c))
-        return tokenNumber(c);
+        return token_number(c);
 
     if (char_is_letter(c))
-        return tokenString(c);
+        return token_string(c);
 
     if(c == '\0'){
         printf("Reached EOF");
@@ -58,7 +64,7 @@ Token * identify_token(){
     exit(1);
 }
 
-Token * tokenOpRel(char c){
+Token * token_op_rel(char c){
     char next_char;
     // Operadores relacionais
 
@@ -84,7 +90,7 @@ Token * tokenOpRel(char c){
     }
 }
 
-Token * tokenOpArit(char c){
+Token * token_op_arit(char c){
     if(c == '*')
         return create_token(OpAritMult, "*");
 
@@ -98,7 +104,7 @@ Token * tokenOpArit(char c){
         return create_token(OpAritSub, "-");
 }
 
-Token * tokenNumber(char c){
+Token * token_number(char c){
     char next_char;
     char * number_str;          // Stores the number string
     char integer_buffer[20] = {0};    // Integer number with maximum of 20 digits. Allocated with {0} to prevent garbage to output
@@ -123,13 +129,13 @@ Token * tokenNumber(char c){
         }
         integer_buffer[integer_buffer_pos++] = next_char;
     }
-
+    // Checking if after the '.' there is another number, otherwise it's not a valid float number
+    next_char = read_buffer();
+    if(!char_is_number(next_char)){
+        regress_buffer();
+        int_or_float == 'i';
+    }
     if (int_or_float == 'f'){
-        // Checking if after the '.' there is another number, otherwise it's not a valid float number
-        next_char = read_buffer();
-        if(!char_is_number(next_char));
-            // TODO: throw error
-        
         // Reading the float part
         float_buffer[float_buffer_pos++] = next_char;
         while(1){
@@ -151,7 +157,7 @@ Token * tokenNumber(char c){
     return create_token(NumInt, number_str);
 }
 
-Token * tokenString(char c){
+Token * token_string(char c){
     char token_string[50] = {0};       // Supposing string can have, at maximum, 50 characters long
     int token_string_pos = 0;
     char next_char;
@@ -175,7 +181,8 @@ Token * tokenString(char c){
             // Precisamos criar um método para guardar o tipo da keyword tb, mas não sei bem todos os que tem
             Token * t = create_token(PalavraChave, token_string);
             t->token_type_str = malloc(sizeof(char) * 50);
-            strcpy(t->token_type_str, token_string);
+            sprintf(t->token_type_str, "\'%s\'", token_string);
+            // strcpy(t->token_type_str, token_string);
             return t;
         }
     }
@@ -184,16 +191,79 @@ Token * tokenString(char c){
     return create_token(IDENT, token_string);
 
 }
+
+Token * token_special_char(char c){
+    if(c == '(')
+        return create_token(AbrePar, "(");
+    if(c == ')')
+        return create_token(FechaPar, ")");
+    if(c == '[')
+        return create_token(AbreCol, "[");
+    if(c == ']')
+        return create_token(FechaCol, "]");
+    if(c == ',')
+        return create_token(Virgula, ",");
+    if(c == '%')
+        return create_token(Porcento, "%%");
+    if(c == ':')
+        return create_token(DELIM, ":");
+    if(c == '^')
+        return create_token(Circunflexo, "^");
+    if(c == '&')
+        return create_token(EComercial, "&");
+    
+    if(c == '.'){
+        if(read_buffer() == '.')
+            return create_token(PontoPonto, "..");
+        regress_buffer();
+        return create_token(Ponto, ".");
+    }
+    
+}
+
+Token * token_literal_string(char c){
+    char literal_string[200] = {0};     // Stores literal strings up to 200 characters
+    int literal_string_pos = 0;
+    char next_char;
+    int closed_quotes = 0;
+    
+    literal_string[literal_string_pos++] = c;
+    
+    while(1){
+        if(reached_EOF()) break;
+        
+        next_char = read_buffer();
+        if(next_char == '\n')   // Broke a line without closing quotes
+            break;
+        
+        literal_string[literal_string_pos++] = next_char;
+
+        if(next_char == '\"'){      // Verification is after because it's needed to print '"' as well
+        
+            closed_quotes = 1;
+            break;
+        }
+        
+    }
+
+    if(!closed_quotes){
+        printf("Sintax error: Unclosed quotes at \"%s\"", literal_string);
+        exit(1);
+    }
+    return create_token(StringLiteral, literal_string);
+}
 /* Tools */
 // Reads any spaces or line break
 void skip_spaces(){
     char c;
     do{
         c = read_buffer();
-    }while(c == ' ' || c == '\n');
+    }while(c == ' ' || c == '\n' || c == '\r' || c == '\t');
 
     regress_buffer();
 }
+
+
 
 // Skips comments
 // Coments starts with '{' and ends with '}' or a \n

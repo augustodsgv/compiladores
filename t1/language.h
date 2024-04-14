@@ -4,10 +4,12 @@
 
 /* Tokens generation */
 Token * identify_token();
-Token * tokenOpRel(char c);
-Token * tokenOpArit(char c);
-Token * tokenNumber(char c);
-Token * tokenString(char c);
+Token * token_op_rel(char c);
+Token * token_op_arit(char c);
+Token * token_number(char c);
+Token * token_string(char c);
+Token * token_special_char(char c);
+Token * token_literal_string(char c);
 
 /* Tools */
 void skip_spaces();

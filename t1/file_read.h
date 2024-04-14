@@ -4,7 +4,8 @@
 #define BUFFER_SIZE 5
 
 /* File operations */
-int open_file(char * file_name);
+int open_input_file(char * file_name);
+int open_ouput_file(char * file_name);
 int reached_EOF();
 void closefile();
 

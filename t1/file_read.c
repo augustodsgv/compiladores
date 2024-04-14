@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include "file_read.h"
 
-FILE * file;
+FILE * in_file;
+FILE * out_file;
 
 char buffer[BUFFER_SIZE * 2];
 
@@ -14,19 +15,24 @@ int buffer_regressed = 0;
 
 // Opens file to "file" var.
 // Returns true if the file was opened successfully
-int open_file(char * file_name){
-    file = fopen(file_name, "r");
-    return file != NULL;
+int open_input_file(char * file_name){
+    in_file = fopen(file_name, "r");
+    return in_file != NULL;
 }
+
+// int open_ouput_file(char * file_name){
+//     in_file = fopen(file_name, "w");
+//     return in_file != NULL;
+// }
 
 // Returns if the program reached the end of the file
 int reached_EOF(){
-    return feof(file);
+    return feof(in_file);
 }
 
 // Closes the file
 void close_file(){
-    fclose(file);
+    fclose(in_file);
 }
 
 /* Buffer operations */
@@ -42,7 +48,7 @@ int load_buffer(int buffer_half){
         printf("Error: Trying to read file, but reached EOF\n");
         exit(1);
     }
-    return fread(&buffer[BUFFER_SIZE * buffer_half], sizeof(char), BUFFER_SIZE, file);
+    return fread(&buffer[BUFFER_SIZE * buffer_half], sizeof(char), BUFFER_SIZE, in_file);
 }
 
 // Returns if there are still tokens available for reading
@@ -61,7 +67,7 @@ int tokens_available(){
 
     if (buffer_regressed)       // If buffer regressed, it will fail past tests, once it will reach EOF (it loaded the buffer) but it will be at last buffer
         return 1;
-        
+
     return 0;
 }
 
@@ -103,3 +109,8 @@ void regress_buffer(){
         buffer_pos--;
     }
 }
+
+// // Prints a token to the file
+// void print_token_to_file(char * token_string){
+//     fprintf("%s\n", )
+// }
