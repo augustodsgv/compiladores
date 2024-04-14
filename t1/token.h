@@ -5,6 +5,7 @@
 
 // Tipos de Tokens
 typedef enum {
+    PalavraChave,
     PCDeclaracoes,
     PCAlgoritmo,
     PCInteiro,
@@ -34,7 +35,7 @@ typedef enum {
     Delim,
     AbrePar,
     FechaPar,
-    Var,
+    IDENT,
     NumInt,
     NumReal,
     Cadeia,
@@ -44,7 +45,7 @@ typedef enum {
 typedef struct {
     Token_type token_type;     // Guarda o tipo do token em uma string
     char * lexema;
-    // char * token_type_str;
+    char * token_type_str;      // GAMBIARRA: Usado somente para palavras chave, por que elas sao tratadas diferente
 }Token;
 
 Token * create_token(Token_type token_type, char * lexema);

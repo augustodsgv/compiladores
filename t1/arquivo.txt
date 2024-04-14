@@ -1,2 +1,5 @@
 { Este é um comentário brabo }
+augusto
+literal
+declare
 1122311.979900889779+123=7766+

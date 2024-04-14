@@ -13,6 +13,7 @@ Token * tokenString(char c);
 void skip_spaces();
 void skip_comments();
 
+int is_valid_identifier(char c);
 int char_is_letter(char c);
 int char_is_number(char c);
 

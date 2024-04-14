@@ -170,8 +170,19 @@ Token * tokenString(char c){
 
     // Checking for key words
     for(int i = 0; i < 37; i++){
-        if
+        if(!strcmp(token_string, keywords[i])){    // Case it's a keyword
+            // GAMBIARRA: criei um atributo novo de type_str para guardar o texto a ser guardado nos tokens de keyword.
+            // Precisamos criar um método para guardar o tipo da keyword tb, mas não sei bem todos os que tem
+            Token * t = create_token(PalavraChave, token_string);
+            t->token_type_str = malloc(sizeof(char) * 50);
+            strcpy(t->token_type_str, token_string);
+            return t;
+        }
     }
+
+    // Otherwise, it will be consider an identifier
+    return create_token(IDENT, token_string);
+
 }
 /* Tools */
 // Reads any spaces or line break
