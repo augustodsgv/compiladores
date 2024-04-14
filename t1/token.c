@@ -113,11 +113,11 @@ char * get_token_Type(Token * t){
         case IDENT :
             return "IDENT";
         case NumInt :
-            return "\'NUM_INT\'";
+            return "NUM_INT";
         case NumReal :
-            return "\'NUM_REAL\'";
+            return "NUM_REAL";
         case Cadeia :
-            return "\'CADEIA\'";
+            return "CADEIA";
         case Fim :
             return "\'Fim\'";
         default:
