@@ -77,6 +77,9 @@ Token * token_op_rel(char c){
             return create_token(OpRelMenorIgual, "<=");     // <= 
         if (next_char == '>')
             return create_token(OpRelDif, "<>");            // <>, different 
+        if (next_char == '-')
+            return create_token(BackArrow, "<-");            // GAMBIARRA: isso deveria estar em outro lugar, está aqui só pra ser mais fácil
+        
         regress_buffer();
         return create_token(OpRelMenor, "<");               // <
     }

@@ -28,6 +28,7 @@ typedef enum {
     OpRelMenor,
     OpRelMenorIgual,
     OpRelMaiorIgual,
+    BackArrow,
     OpRelMaior,
     OpRelIgual,
     OpRelDif,

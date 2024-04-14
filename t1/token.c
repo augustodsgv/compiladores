@@ -74,6 +74,8 @@ char * get_token_Type(Token * t){
             return "\'<\'";
         case OpRelMenorIgual :
             return "\'<=\'";
+        case BackArrow :
+            return "\'<-\'";
         case OpRelMaiorIgual :
             return "\'>=\'";
         case OpRelMaior :
