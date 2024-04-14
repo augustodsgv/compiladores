@@ -101,6 +101,8 @@ Token * tokenNumber(char c){
         if (!char_is_number(next_char)){  // End of number or end of integer part 
             if(next_char == '.')            // It is a float number
                 int_or_float = 'f';
+            else
+                regress_buffer();       // Returning not number to the buffer
             break;
         }
         integer_buffer[integer_buffer_pos++] = next_char;
@@ -128,7 +130,6 @@ Token * tokenNumber(char c){
         sprintf(number_str, "%s.%s", integer_buffer, float_buffer);
         return create_token(NumReal, number_str);
     }
-    regress_buffer();       // Returning not number after the number
     number_str = malloc(sizeof(char) * 21);
     strcpy(number_str, integer_buffer);
     return create_token(NumInt, number_str);

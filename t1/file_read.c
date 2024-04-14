@@ -50,14 +50,17 @@ int tokens_available(){
     // printf("buffer_pos %d\n", buffer_pos);
     if (!reached_EOF())     // Data in file
         return 1;
-
+    // When reaches end of file, it will read n char + one '\0'
+    // So, our buffer_pos will go from 0 to buffer_load_size - 2 (-1 from \0 and -1 from starting at 0)
     // Data remaining in buffers
-    if (buffer_pos < buffer_load_size - 1)      // Buffer 1 not empty
+    if (buffer_pos < buffer_load_size)      // Buffer 1 not empty
         return 1;
 
-    if (buffer_pos >= BUFFER_SIZE && buffer_pos < BUFFER_SIZE + buffer_load_size - 1)    // Buffer 2 not empty
+    if (buffer_pos >= BUFFER_SIZE && buffer_pos < BUFFER_SIZE + buffer_load_size)    // Buffer 2 not empty
         return 1;
 
+    if (buffer_regressed)       // If buffer regressed, it will fail past tests, once it will reach EOF (it loaded the buffer) but it will be at last buffer
+        return 1;
     return 0;
 }
 
