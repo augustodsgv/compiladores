@@ -9,10 +9,10 @@ char letters[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm
 // char special_char_identifiers[] = {'_'}; // Chars for building identifiers that are not letters neither numbers
 char numbers[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 char * keywords[] = {"algoritmo",  "declare",  "literal",  "inteiro",  "leia",  "escreva",  "fim_algoritmo",  "real",  "literal" 
-,  "logico",  "fim_se",  "senao",  "entao",  "se",  "ou",  "fim_caso",  "para",  "ate",  "faca",  "fim_para"
+,  "logico",  "fim_se",  "senao",  "entao",  "se", "fim_caso",  "para",  "ate",  "faca",  "fim_para"
 ,  "fim_enquanto",  "fim_para",  "seja",  "caso",  "enquanto",  "registro",  "fim_registro"
 ,  "tipo",  "fim_procedimento",  "procedimento",  "var",  "funcao",  "fim_funcao"
-,  "retorne",  "constante",  "falso",  "verdadeiro"};
+,  "retorne",  "constante",  "falso",  "verdadeiro", "nao", "ou", "e"};
 
 // Recognizes a token 
 Token * identify_token(){
@@ -179,7 +179,7 @@ Token * token_string(char c){
 
     token_string[token_string_pos] = '\0';
     // Checking for key words
-    for(int i = 0; i < 37; i++){
+    for(int i = 0; i < 39; i++){
         if(!strcmp(token_string, keywords[i])){    // Case it's a keyword
             // GAMBIARRA: criei um atributo novo de type_str para guardar o texto a ser guardado nos tokens de keyword.
             // Precisamos criar um método para guardar o tipo da keyword tb, mas não sei bem todos os que tem
