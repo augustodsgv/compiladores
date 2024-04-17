@@ -16,14 +16,14 @@ char * keywords[] = {"algoritmo",  "declare",  "literal",  "inteiro",  "leia",  
 
 // Recognizes a token 
 Token * identify_token(){
-    if(!tokens_available()){
-        return NULL;
-    }
     // Skipping spaces
     skip_spaces();
     
     // Reading char from buffer
     char c = read_buffer();
+
+    if(c == '\0')
+        return NULL;
 
     // TODO: this does not treats comments after comments
     // Skipping comments, if there are any
@@ -120,8 +120,9 @@ Token * token_number(char c){
 
     // Treating integer part
     while(1){
-        if(!tokens_available()) break;            // EOF, cannot read more
         next_char = read_buffer();
+        if(next_char == '\0') break;                // EOF, cannot read more
+
         if (!char_is_number(next_char)){  // End of number or end of integer part 
             if(next_char == '.')            // It is a float number
                 int_or_float = 'f';
@@ -141,9 +142,9 @@ Token * token_number(char c){
         // Reading the float part
         float_buffer[float_buffer_pos++] = next_char;
         while(1){
-            if(!tokens_available()) break;            // EOF, cannot read more
 
             next_char = read_buffer();
+            if(next_char == '\0') break;                // EOF, cannot read more
             if (!char_is_number(next_char)){  // End of float part
                 regress_buffer();
                 break;
@@ -166,8 +167,8 @@ Token * token_string(char c){
     token_string[token_string_pos++] = c;
 
     while(1){
-        if(!tokens_available()) break;  // Breaks if reaches end of tokens
         next_char = read_buffer();
+        if(next_char == '\0') break;                // EOF, cannot read more
         
         if(!is_valid_identifier(next_char)){    // Ended building identifier string
             regress_buffer();
@@ -274,8 +275,8 @@ void skip_comments(){
     int closed_comment = 0;
 
     while(1){
-        if(!tokens_available()) break;  // End of tokens to read
         next_char = read_buffer();
+        if(next_char == '\0') break;                // EOF, cannot read more
 
         if (next_char == '}'){          // Closed comment
             closed_comment = 1;

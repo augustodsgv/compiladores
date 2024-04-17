@@ -31,7 +31,7 @@ int main(int argc, char * argv[]){
 
     start_buffer();
 
-    while(tokens_available()){
+    while(!reached_EOF()){
         Token * t = identify_token();
         if (t != NULL)      // GAMBIARRA: se for um comentário, retorna NULL, deve ter um jeito melhor de fazer isso
             fprintf(out_file, "<\'%s\',%s>\n",t->lexema, get_token_Type(t));
