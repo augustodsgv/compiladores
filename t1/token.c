@@ -101,7 +101,7 @@ char * get_token_Type(Token * t){
         case Virgula :
             return "\',\'";
         case Porcento :
-            return "\'%%\'";
+            return "\'%\'";
         case Circunflexo :
             return "\'^\'";
         case EComercial:

@@ -14,8 +14,11 @@ char * keywords[] = {"algoritmo",  "declare",  "literal",  "inteiro",  "leia",  
 ,  "tipo",  "fim_procedimento",  "procedimento",  "var",  "funcao",  "fim_funcao"
 ,  "retorne",  "constante",  "falso",  "verdadeiro", "nao", "ou", "e"};
 
+int line = 1;
+
 // Recognizes a token 
-Token * identify_token(){
+Token * identify_token(FILE * out_file){            //GAMBIARRA: passando out_file para tratar exceçoes
+                                                    //(comentarios e strings nao fechados e simbolos nao identificados)
     // Skipping spaces
     skip_spaces();
     
@@ -28,7 +31,7 @@ Token * identify_token(){
     // TODO: this does not treats comments after comments
     // Skipping comments, if there are any
     if(c == '{'){
-        skip_comments();
+        skip_comments(out_file);
         return NULL;
     }
 
@@ -44,7 +47,7 @@ Token * identify_token(){
         return token_special_char(c);
 
     if (c == '\"')
-        return token_literal_string('\"');
+        return token_literal_string('\"', out_file);
 
     // Integer or float number
     if (char_is_number(c))
@@ -58,9 +61,8 @@ Token * identify_token(){
         return NULL;
     }
     // // Else
-    // printf("Symbol \" %c \" not recognized\n", c);
-    // printf("%d\n", c);
-    // exit(1);
+    fprintf(out_file, "Linha %d: %c - simbolo nao identificado\n", get_line(), c);
+    exit(1);
 }
 
 Token * token_op_rel(char c){
@@ -124,8 +126,16 @@ Token * token_number(char c){
         if(next_char == '\0') break;                // EOF, cannot read more
 
         if (!char_is_number(next_char)){  // End of number or end of integer part 
-            if(next_char == '.')            // It is a float number
-                int_or_float = 'f';
+            if(next_char == '.') {            // It is a float number
+                next_char = read_buffer();
+                if (next_char == '.') {         //GAMBIARRA: tratando '..' entre inteiros como notaçao de intervalo
+                    regress_buffer();
+                    regress_buffer();
+                    break;
+                } else
+                    regress_buffer();
+                    int_or_float = 'f';
+            }
             else
                 regress_buffer();       // Returning not number to the buffer
             break;
@@ -208,7 +218,7 @@ Token * token_special_char(char c){
     if(c == ',')
         return create_token(Virgula, ",");
     if(c == '%')
-        return create_token(Porcento, "%%");
+        return create_token(Porcento, "%");
     if(c == ':')
         return create_token(DELIM, ":");
     if(c == '^')
@@ -225,7 +235,7 @@ Token * token_special_char(char c){
     
 }
 
-Token * token_literal_string(char c){
+Token * token_literal_string(char c, FILE * out_file){
     char literal_string[200] = {0};     // Stores literal strings up to 200 characters
     int literal_string_pos = 0;
     char next_char;
@@ -251,7 +261,7 @@ Token * token_literal_string(char c){
     }
 
     if(!closed_quotes){
-        printf("Sintax error: Unclosed quotes at \"%s\"", literal_string);
+        fprintf(out_file, "Linha %d: cadeia literal nao fechada\n", get_line());
         exit(1);
     }
     return create_token(StringLiteral, literal_string);
@@ -262,6 +272,8 @@ void skip_spaces(){
     char c;
     do{
         c = read_buffer();
+        if (c == '\n')
+            line++;
     }while(c == ' ' || c == '\n' || c == '\r' || c == '\t');
 
     regress_buffer();
@@ -270,7 +282,7 @@ void skip_spaces(){
 
 // Skips comments
 // Coments starts with '{' and ends with '}' or a \n
-void skip_comments(){
+void skip_comments(FILE * out_file){                //GAMBIARRA: passando out_file para escrever o erro direto no arquivo
     char next_char;
     int closed_comment = 0;
 
@@ -287,7 +299,7 @@ void skip_comments(){
     }
 
     if (!closed_comment){               // Unclosed comments are found by \n or by EOF without closing
-        printf("Sintaxe error: unclosed comment\n");
+        fprintf(out_file, "Linha %d: comentario nao fechado\n", get_line());
         exit(1);
     }
 }
@@ -314,4 +326,8 @@ int is_valid_identifier(char c){
     if (c == '_') return 1;
 
     return 0;
+}
+
+int get_line(){
+    return line;
 }
