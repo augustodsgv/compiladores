@@ -1,9 +1,13 @@
+/*
+    Description: Main function of the lexic analyser built for the "Compilers" subject
+    Authors: Augusto dos Santos and Gabriel Nadalin
+    Date: April 2024
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "token.h"
 #include "file_read.h"
 #include "language.h"
-
 
 int main(int argc, char * argv[]){
     // 0 file name
@@ -29,14 +33,20 @@ int main(int argc, char * argv[]){
         exit(1);
     }
 
-    start_buffer();
+    start_buffer();         // Alocating buffer and making first load
 
+    // Loops while don't reach EOF
     while(!reached_EOF()){
         Token * t = identify_token(out_file);
-        if (t != NULL)      // GAMBIARRA: se for um comentário, retorna NULL, deve ter um jeito melhor de fazer isso
+        if (t != NULL){     // Testando se é um token válido
             fprintf(out_file, "<\'%s\',%s>\n",t->lexema, get_token_Type(t));
-        
+            clean_token(&t);
+        }
     }
+
+    // Closing files
+    close_input_file();
+    fclose(out_file);
 
     return 0;
 }

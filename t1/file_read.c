@@ -1,3 +1,8 @@
+/*
+    Description: File and buffer implementation for read data from files
+    Authors: Augusto dos Santos and Gabriel Nadalin
+    Date: April 2024
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "file_read.h"
@@ -31,7 +36,7 @@ int reached_EOF(){
 }
 
 // Closes the file
-void close_file(){
+void close_input_file(){
     fclose(in_file);
 }
 
@@ -50,43 +55,6 @@ int load_buffer(int buffer_half){
     }
     int saida = fread(&buffer[BUFFER_SIZE * buffer_half], sizeof(char), BUFFER_SIZE, in_file);
     return saida;
-}
-
-// Returns if there are still tokens available for reading
-int tokens_available(){
-    printf("buffer_load_size: %d\n", buffer_load_size);
-    printf("buffer: %s\n", buffer);
-    // printf("buffer_pos %d\n", buffer_pos);
-    if (!reached_EOF())     // Data in file
-        return 1;
-    // When reaches end of file, it will read n char + one '\0'
-    // So, our buffer_pos will go from 0 to buffer_load_size - 2 (-1 from \0 and -1 from starting at 0)
-    // Data remaining in buffers
-    if (buffer_load_size == BUFFER_SIZE){       // Loaded buffer_size successfully
-        printf("buff_load == buff_size\n");
-        if (buffer_pos < BUFFER_SIZE -1)      // Buffer 1 not empty
-            return 1;
-
-        if (buffer_pos >= BUFFER_SIZE && buffer_pos < 2 * BUFFER_SIZE - 1)    // Buffer 2 not empty
-            return 1;
-
-        if (buffer_regressed)       // If buffer regressed, it will fail past tests, once it will reach EOF (it loaded the buffer) but it will be at last buffer
-            return 1;
-    }else{
-        printf("buff_load != buff_size\n");
-        
-        if (buffer_pos < buffer_load_size - 2)      // Buffer 1 not empty
-            return 1;
-
-        if (buffer_pos >= BUFFER_SIZE && buffer_pos < BUFFER_SIZE + buffer_load_size -2)    // Buffer 2 not empty
-            return 1;
-
-        if (buffer_regressed)       // If buffer regressed, it will fail past tests, once it will reach EOF (it loaded the buffer) but it will be at last buffer
-            return 1;
-
-    }
-    printf("0\n");
-    return 0;
 }
 
 // Reads a char from buffer
@@ -128,6 +96,7 @@ void regress_buffer(){
     }
 }
 
+// Prints the current state of the buffer, for debuggin porpouses
 void print_buffer(){
     // printf("buffer_regressed: %d\n", buffer_regressed);
     // "v"

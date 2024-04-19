@@ -1,3 +1,8 @@
+/*
+    Description: File and buffer description for read data from files
+    Authors: Augusto dos Santos and Gabriel Nadalin
+    Date: April 2024
+*/
 #ifndef FILE_READ_H
 #define FILE_READ_H
 
@@ -5,14 +10,12 @@
 
 /* File operations */
 int open_input_file(char * file_name);
-int open_ouput_file(char * file_name);
 int reached_EOF();
-void closefile();
+void close_input_file();
 
 /* Buffer operations */
 void start_buffer();
 int load_buffer();
-int tokens_available();
 char read_buffer();
 void increment_buffer();
 void regress_buffer();

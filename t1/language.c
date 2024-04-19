@@ -1,3 +1,8 @@
+/*
+    Description: Language logic implementation for token recognition
+    Authors: Augusto dos Santos and Gabriel Nadalin
+    Date: April 2024
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -60,11 +65,12 @@ Token * identify_token(FILE * out_file){            //GAMBIARRA: passando out_fi
         printf("Reached EOF");
         return NULL;
     }
-    // // Else
+    // Else
     fprintf(out_file, "Linha %d: %c - simbolo nao identificado\n", get_line(), c);
     exit(1);
 }
 
+// Relational operation token
 Token * token_op_rel(char c){
     char next_char;
     // Operadores relacionais
@@ -79,7 +85,7 @@ Token * token_op_rel(char c){
         if (next_char == '>')
             return create_token(OpRelDif, "<>");            // <>, different 
         if (next_char == '-')
-            return create_token(BackArrow, "<-");            // GAMBIARRA: isso deveria estar em outro lugar, está aqui só pra ser mais fácil
+            return create_token(BackArrow, "<-");            // This is not a relational token, but it's so close...
         
         regress_buffer();
         return create_token(OpRelMenor, "<");               // <
@@ -94,6 +100,7 @@ Token * token_op_rel(char c){
     }
 }
 
+// Arithmetic operation token
 Token * token_op_arit(char c){
     if(c == '*')
         return create_token(OpAritMult, "*");
@@ -108,6 +115,7 @@ Token * token_op_arit(char c){
         return create_token(OpAritSub, "-");
 }
 
+// Real and integer numbers
 Token * token_number(char c){
     char next_char;
     char * number_str;          // Stores the number string
@@ -128,7 +136,7 @@ Token * token_number(char c){
         if (!char_is_number(next_char)){  // End of number or end of integer part 
             if(next_char == '.') {            // It is a float number
                 next_char = read_buffer();
-                if (next_char == '.') {         //GAMBIARRA: tratando '..' entre inteiros como notaçao de intervalo
+                if (next_char == '.') {         // Tratando '..' entre inteiros como notaçao de intervalo
                     regress_buffer();
                     regress_buffer();
                     break;
@@ -170,6 +178,7 @@ Token * token_number(char c){
     return create_token(NumInt, number_str);
 }
 
+// Identifiers and keywords
 Token * token_string(char c){
     char token_string[50];       // Supposing string can have, at maximum, 50 characters long
     int token_string_pos = 0;
@@ -187,14 +196,12 @@ Token * token_string(char c){
         token_string[token_string_pos++] = next_char;
     }
 
-    token_string[token_string_pos] = '\0';
+    token_string[token_string_pos] = '\0';      // Adding string terminator symbol
     // Checking for key words
     for(int i = 0; i < 39; i++){
         if(!strcmp(token_string, keywords[i])){    // Case it's a keyword
-            // GAMBIARRA: criei um atributo novo de type_str para guardar o texto a ser guardado nos tokens de keyword.
-            // Precisamos criar um método para guardar o tipo da keyword tb, mas não sei bem todos os que tem
             Token * t = create_token(PalavraChave, token_string);
-            t->token_type_str = malloc(sizeof(char) * 50);
+            t->token_type_str = malloc(sizeof(char) * 50);      // If it's an keywords, creating a new atribute to it
             sprintf(t->token_type_str, "\'%s\'", token_string);
             // strcpy(t->token_type_str, token_string);
             return t;
@@ -206,6 +213,7 @@ Token * token_string(char c){
 
 }
 
+// Special character token
 Token * token_special_char(char c){
     if(c == '(')
         return create_token(AbrePar, "(");
@@ -235,6 +243,7 @@ Token * token_special_char(char c){
     
 }
 
+// Literal string token, envolved by quotes
 Token * token_literal_string(char c, FILE * out_file){
     char literal_string[200] = {0};     // Stores literal strings up to 200 characters
     int literal_string_pos = 0;
@@ -253,7 +262,6 @@ Token * token_literal_string(char c, FILE * out_file){
         literal_string[literal_string_pos++] = next_char;
 
         if(next_char == '\"'){      // Verification is after because it's needed to print '"' as well
-        
             closed_quotes = 1;
             break;
         }
@@ -318,6 +326,7 @@ int char_is_number(char c){
         if (c == numbers[i]) return 1;
     return 0;
 }
+
 // Checks if char is a valid for building identifiers
 // Only checks for second or later characters in the identifier
 int is_valid_identifier(char c){

@@ -1,3 +1,8 @@
+/*
+    Tokens functions description
+    Authors: Augusto dos Santos and Gabriel Nadalin
+    Date: April 2024
+*/
 #ifndef TOKEN_H
 #define TOKEN_H
 
@@ -7,20 +12,6 @@
 typedef enum {
     PalavraChave,
     StringLiteral,
-    // PCDeclaracoes,
-    // PCAlgoritmo,
-    // PCInteiro,
-    // PCReal,
-    // PCAtribuir,
-    // PCA,
-    // PCLer,
-    // PCImprimir,
-    // PCSe,
-    // PCEntao,
-    // PCSenao,
-    // PCEnquanto,
-    // PCInicio,
-    // PCFim,
     OpAritMult,
     OpAritDiv,
     OpAritSoma,
@@ -59,6 +50,7 @@ typedef struct {
 }Token;
 
 Token * create_token(Token_type token_type, char * lexema);
+void clean_token(Token ** t);
 char * get_token_Type(Token * t);
 void print_token(Token * t);
 

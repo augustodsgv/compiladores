@@ -1,5 +1,10 @@
-#ifndef LANGAUGE_H
-#define LANGAUGE_H
+/*
+    Description: Language logic declaration for token recognition
+    Authors: Augusto dos Santos and Gabriel Nadalin
+    Date: April 2024
+*/
+#ifndef LANGUAGE_H
+#define LANGUAGE_H
 #include "token.h"
 
 /* Tokens generation */
@@ -20,4 +25,4 @@ int char_is_letter(char c);
 int char_is_number(char c);
 int get_line();
 
-#endif /* LANGAUGE_H */
+#endif /* LANGuAGE_H */

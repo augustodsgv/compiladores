@@ -1,8 +1,16 @@
+/*
+    Tokens functions implementations
+    Authors: Augusto dos Santos and Gabriel Nadalin
+    Date: April 2024
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "token.h"
 
+// Creates a token based on a tokne_type and it's "lexema"
 Token * create_token(Token_type token_type, char * lexema){
     Token * t = malloc(sizeof(Token));
     t->lexema = malloc(sizeof(char) * MAX_LEXEMA_SIZE);
@@ -12,56 +20,27 @@ Token * create_token(Token_type token_type, char * lexema){
     }
     strcpy(t->lexema, lexema);
     t->token_type = token_type;
+    t->token_type_str = NULL;
     return t;
 }
 
-// Token * create_token(char * tipo_token, char * lexema){
-//     Token * t = malloc(sizeof(Token));
-//     t->lexema = malloc(sizeof(char) * MAX_LEXEMA_SIZE);
-//     if (strlen(lexema) > MAX_LEXEMA_SIZE){
-//         perror("Lexema has a size bigger then the maximum allowed");
-//         exit(1);
-//     }
-//     strcpy(t->lexema, lexema);
-//     t->token_type = token_type;
-//     return t;
-// }
+// Dealocates token
+void clean_token(Token ** t){
+    if(*t == NULL) return;
+    free((*t)->lexema);
+    if ((*t)->token_type_str != NULL)       // Sometimes this field is not used
+        free((*t)->token_type_str);
+    free(*t);
+    *t = NULL;
+}
 
+// Returns the token type as a string
 char * get_token_Type(Token * t){
     switch (t->token_type){
-        case PalavraChave:      // GAMBIARRA: Precisa arrumar, as palavras chaves deveriam ter um tipo para cada palavra, mas sao tratadas todas iguais aqui
+        case PalavraChave:      // Por motivos de simplicidade, todas palavras chaves foram tratadas como iguais
             return t->token_type_str;
-        case StringLiteral:     // GAMBIARRA: string literais estão sendo jogadas para o lexema, está certo isso?
+        case StringLiteral:
             return "CADEIA";
-        // Todas Palavras chave foram removidas, por hora
-        // case PCDeclaracoes :
-        //     return "Declare";
-        // case PCAlgoritmo :
-        //     return "PCAlgoritmo";
-        // case PCInteiro:
-        //     return "PCInteiro";
-        // case PCReal :
-        //     return "PCReal";
-        // case PCAtribuir:
-        //     return "PCAtribuir";
-        // case PCA :
-        //     return "PCA";
-        // case PCLer :
-        //     return "PCLer";
-        // case PCImprimir :
-        //     return "PCImprimir";
-        // case PCSe :
-        //     return "PCSe";
-        // case PCEntao :
-        //     return "PCEntao";
-        // case PCSenao :
-        //     return "PCSenao";
-        // case PCEnquanto :
-        //     return "PCEnquanto";
-        // case PCInicio :
-        //     return "PCInicio";
-        // case PCFim :
-        //     return "fim_algoritmo";
         case OpAritMult :
             return "\'*\'";
         case OpAritDiv :
@@ -126,7 +105,7 @@ char * get_token_Type(Token * t){
     }
 }
 
-// Returns a strin in the format < TokenType , "Lexema"\' >
+// Prints the token in console formated as < TokenType , "Lexema"\' >
 void print_token(Token * t){
     if (t == NULL)
         printf("NULL token\n");
@@ -134,12 +113,4 @@ void print_token(Token * t){
         printf("< %s >", get_token_Type(t));
     else
         printf("<\'%s\',%s>", t->lexema, get_token_Type(t));
-}
-
-// Returns the token string
-char * get_token_str(Token * t){
-    char * token_str = calloc(sizeof(char), 50);    // Calloc so it starts everything with \0
-    sprintf("<\'%s\',%s>",t->lexema, get_token_str(t));
-    
-    return token_str;
 }
